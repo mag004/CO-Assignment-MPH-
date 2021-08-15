@@ -283,6 +283,8 @@ def typeC(line , count):
         #     E=1
     return a
 
+# fixed input stdin
+
 from sys import stdin
 string = ""
 for s in stdin:
