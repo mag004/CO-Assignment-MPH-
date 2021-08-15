@@ -7,7 +7,7 @@ TypeC = ["div","not","cmp"]
 TypeD = ["ld","st"]
 TypeE = ["jmp","jlt","jgt","je"]
 TypeF = ["hlt"]
-check=["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","0","1","2","3","4","5","6","7","8","9","_",":"]
+check=["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","0","1","2","3","4","5","6","7","8","9","_"]
 checknum=["0","1","2","3","4","5","6","7","8","9"]
 V=0
 E=0
@@ -309,6 +309,9 @@ varList=[]
 
 # n = len(asscode.readlines())
 n = len(string.splitlines())
+if (n>256):
+    print("Commands Exceed the valid Limit")
+    quit()
 # print(n)
 labelList = []
 # asscode.seek(0,0)
@@ -338,7 +341,7 @@ for s in string.splitlines(): # for s in asscode.readlines():
     else:
         continue
 
-
+# print(varList)
 a = set(varList)        ## ERROR var defined again
 if len(varList) != len(a):
     print("Variable defined again")
@@ -351,35 +354,44 @@ ncount = 0
 for s in string.splitlines(): # for s in asscode.readlines():
     lst = s.split()
 
-
+    # print(lst)
+    # print(len(lst))
     if(":" in lst):  ## space between label and : ERROR
         print("Incorrect way of defining label , no space between label name and colon ")
         quit()
+    else:
+        if len(lst)>0:
+            if lst[0][-1] == ":":
+                # print(lst)
+                # print(varList)
+                # print(labelList)
+                labelList.extend(varList)
+                # print(labelList)
+                if lst[0][:-1] not in labelList:
+                    str=""
+                    str+=lst[0][:-1]
+                    for i in str:
+                        if(i not in check):
+                            print("Incorrect way of defining label in line {}".format(ncount))    ### way of writing in label ERROR ###
+                            quit()
+                    # labelList.append(lst[0])
 
-
-    if lst[0][-1] == ":":
-        if lst[0] not in labelList:
-            str=""
-            str+=lst[0]
-            for i in str:
-                if(i not in check):
-                    print("Incorrect way of defining label in line {}".format(ncount))    ### way of writing in label ERROR ###
+                else:
+                    print("Label defined again line {}".format(ncount))  ### ERROR label define again
                     quit()
-            labelList.append(lst[0])
-
-        else:
-            print("Label defined again line {}".format(ncount))  ### ERROR label define again
-            quit()
         # print(labelList)
-        # print(lst[0])
-        if lst[0][:-1] not in labelList:
-            labelList.append(lst[0][:-1])
-            # print(lst[0][:-1])
-            Dict[lst[0][:-1]] = decimalToBinary(ncount-v)
-            # print(Dict.items())
-        else:
-            print("Label defined again line {}".format(ncount))
-            quit()
+            # print(lst[0])
+                if lst[0][:-1] not in labelList:
+                    labelList.append(lst[0][:-1])
+                # print(lst[0][:-1])
+                    Dict[lst[0][:-1]] = decimalToBinary(ncount-v)
+                else:
+                    print("Label defined Again")
+                    quit()
+                # print(Dict.items())
+            # else:
+            #     print("Label defined again line {}".format(ncount))
+            #     quit()
 
     ncount+=1
     # print(ncount)
@@ -412,10 +424,12 @@ for s in string.splitlines():# for s in asscode.readlines():
         # print(count)
         continue
     lst=list(s.split())
+    # print(lst)
     # if lst[0]=="var":
         # print("error line{}".format(count))
         # break
-    if lst[0][-1] == ":":
+    if len(lst)>0:
+        if lst[0][-1] == ":":
         # print("pallav")
         # if lst[0][:-1:] not in labelList:
         #     labelList.append(lst[0][:-1:])
@@ -430,47 +444,47 @@ for s in string.splitlines():# for s in asscode.readlines():
         #     break
         # else:
         #     Dict[lst[0][0:-2]] = decimalToBinary(count)
-        if(lst[1] in TypeA):
-            print(typeA(s,count))
-        elif(lst[1] in TypeB):
-            print(typeB(s,count))
-        elif(lst[1] in TypeC):
-            print(typeC(s,count))
-        elif(lst[1] in TypeD):
-            print(typeD(s , count))
-        elif(lst[1] in TypeE):
-            print(typeE(s,count))
-        elif(lst[1] in TypeF):
-            print(typeF(s))
-            quit()
-        elif(lst[1]=="mov" and lst[3][0]=="R" or lst[3]=="FLAGS"):
-            print(typeC(s),count)
-        elif(lst[1]=="mov" and (lst[3][0]=="$")):
-            print(typeB(s),count)
-        else:
-            print("syntax error ")  # ERROR
-            quit()
+            if(lst[1] in TypeA):
+                print(typeA(s,count))
+            elif(lst[1] in TypeB):
+                print(typeB(s,count))
+            elif(lst[1] in TypeC):
+                print(typeC(s,count))
+            elif(lst[1] in TypeD):
+                print(typeD(s , count))
+            elif(lst[1] in TypeE):
+                print(typeE(s,count))
+            elif(lst[1] in TypeF):
+                print(typeF(s))
+                quit()
+            elif(lst[1]=="mov" and lst[3][0]=="R" or lst[3]=="FLAGS"):
+                print(typeC(s),count)
+            elif(lst[1]=="mov" and (lst[3][0]=="$")):
+                print(typeB(s),count)
+            else:
+                print("syntax error ")  # ERROR
+                quit()
         
-    else:
-        if(lst[0] in TypeA):
-            print(typeA(s,count))
-        elif(lst[0] in TypeB):
-            print(typeB(s,count))
-        elif(lst[0] in TypeC):
-            print(typeC(s,count))
-        elif(lst[0] in TypeD):
-            print(typeD(s , count))
-        elif(lst[0] in TypeE):
-            print(typeE(s,count))
-        elif(lst[0] in TypeF):
-            print(typeF(s))
-            quit()
-        elif(lst[0]=="mov" and lst[2][0]=="R" or lst[2]=="FLAGS"):
-            print(typeC(s,count))
-        elif(lst[0]=="mov" and (lst[2][0]=="$")):
-            print(typeB(s,count))
         else:
-            print("syntax error ")  # ERROR
-            quit()
-        
+            if(lst[0] in TypeA):
+                print(typeA(s,count))
+            elif(lst[0] in TypeB):
+                print(typeB(s,count))
+            elif(lst[0] in TypeC):
+                print(typeC(s,count))
+            elif(lst[0] in TypeD):
+                print(typeD(s , count))
+            elif(lst[0] in TypeE):
+                print(typeE(s,count))
+            elif(lst[0] in TypeF):
+                print(typeF(s))
+                quit()
+            elif(lst[0]=="mov" and lst[2][0]=="R" or lst[2]=="FLAGS"):
+                print(typeC(s,count))
+            elif(lst[0]=="mov" and (lst[2][0]=="$")):
+                print(typeB(s,count))
+            else:
+                print("syntax error ")  # ERROR
+                quit()
+            
     count+=1
