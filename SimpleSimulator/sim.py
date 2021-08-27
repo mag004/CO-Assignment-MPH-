@@ -131,7 +131,10 @@ def identify(string):
         elif string[:5] in TypeCOP:
             
             if string[:5] == TypeCOP[0]:
-                Dict2[RegDict[string[10:13]]] = (Dict2[RegDict[string[13:16]]])
+                if "111" == string[13:16]:
+                    Dict2[RegDict[string[10:13]]] = binaryToDecimal("0"*12+V+L+G+E)
+                else:
+                    Dict2[RegDict[string[10:13]]] = (Dict2[RegDict[string[13:16]]])
                 # print(Dict2[RegDict[string[13:16]]])
             V,L,G,E = "0","0","0" , "0"
             if string[:5] == TypeCOP[1]:
